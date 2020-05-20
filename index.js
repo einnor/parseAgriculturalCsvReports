@@ -11,15 +11,15 @@ const rl = readline.createInterface({
 
 const titleCase = (title) => {
 	var titledCase = title.toLowerCase().split(' ');
-	for (var i = 0; i < title.length; i++) {
+	for (var i = 0; i < titledCase.length; i++) {
 		titledCase[i] = titledCase[i][0].toUpperCase() + titledCase[i].slice(1);
 	}
-	return sentence;
+	return titledCase;
 }
 
-rl.question('Drag and drop the csv you want to parse here and press ENTER', (path) => {
-	rl.question('Enter the headers, separating them by commas, then press ENTER', (headers) => {
-		console.log('\n\n\nInitializing...\n\n\n');
+rl.question('Drag and drop the csv you want to parse here and press ENTER\n', (path) => {
+	rl.question('Enter the headers, separating them by commas, then press ENTER\n', (headers) => {
+		console.log('\n\nInitializing...\n');
 
 		const header = headers.split(',').map((item) => ({
 			id: item.toLowerCase(),
@@ -27,15 +27,15 @@ rl.question('Drag and drop the csv you want to parse here and press ENTER', (pat
 		}));
 
 		const dataObject = {};
-		const header = [
-			{ id: 'year', title: 'Year' },
-			{ id: 'camels', title: 'Camels' },
-			{ id: 'cattle', title: 'Cattle' },
-			{ id: 'chickens', title: 'Chickens' },
-			{ id: 'goats', title: 'Goats' },
-			{ id: 'pigs', title: 'Pigs' },
-			{ id: 'sheep', title: 'Sheep' },
-		];
+		// const header = [
+		// 	{ id: 'year', title: 'Year' },
+		// 	{ id: 'camels', title: 'Camels' },
+		// 	{ id: 'cattle', title: 'Cattle' },
+		// 	{ id: 'chickens', title: 'Chickens' },
+		// 	{ id: 'goats', title: 'Goats' },
+		// 	{ id: 'pigs', title: 'Pigs' },
+		// 	{ id: 'sheep', title: 'Sheep' },
+		// ];
 
 		fs.createReadStream(path)
 			.pipe(csv())
