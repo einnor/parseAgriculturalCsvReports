@@ -6,7 +6,7 @@ const writeToCsv = async (header = [], data = [], outputPath = 'output.csv') => 
 		header,
 	});
 	await csvWriter.writeRecords(data);
-	console.log('\nThe CSV file was written successfully!');
+	console.log('\nThe CSV file was written successfully');
 };
 
 module.exports = writeToCsv;

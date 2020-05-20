@@ -19,46 +19,59 @@ const titleCase = (title) => {
 }
 
 rl.question('\nDrag and drop the csv you want to parse here and press ENTER\n', (filePath) => {
-	rl.question('\nEnter the headers, separating them by commas, then press ENTER\n', (headers) => {
-		console.log('\n\nInitializing...');
-
-		const header = headers.split(',').map((item) => ({
-			id: item.toLowerCase(),
-			title: titleCase(item),
-		}));
-
-		const dataObject = {};
-		// const header = [
-		// 	{ id: 'year', title: 'Year' },
-		// 	{ id: 'camels', title: 'Camels' },
-		// 	{ id: 'cattle', title: 'Cattle' },
-		// 	{ id: 'chickens', title: 'Chickens' },
-		// 	{ id: 'goats', title: 'Goats' },
-		// 	{ id: 'pigs', title: 'Pigs' },
-		// 	{ id: 'sheep', title: 'Sheep' },
-		// ];
-
-		console.log('\nReading CSV file...');
-		fs.createReadStream(filePath.trimRight())
-			.pipe(csv())
-			.on('data', (row) => {
-				const key = row.Year;
-				const item = row.Item;
-				const value = row.Value;
-				if (dataObject[key] === undefined) {
-					dataObject[key] = {};
-				}
-				dataObject[key].year = `Y${key}`;
-				dataObject[key][item.toLowerCase()] = value;
-			})
-			.on('end', async () => {
-				console.log('CSV file successfully processed');
-				console.log('\nTransforming data...');
-				const data = Object.keys(dataObject).map((key) => dataObject[key]);
-				console.log('\nWriting to CSV file...');
-				await writeToCsv(header, data, `[PROCESED] ${path.basename(filePath)}`);
-				rl.close();
-			});
+	fs.access(filePath, fs.F_OK, (err) => {
+		if (err) {
+			console.log(filePath);
+			console.error('\nThe file path that you provided is invalid!');
+			rl.close();
+		}
+	
+		// File exists so proceed
+		rl.question('\nEnter the headers, separating them by commas, then press ENTER\n', (headers) => {
+			console.log('\n\nInitializing...');
+	
+			const header = headers.split(',').map((item) => ({
+				id: item.toLowerCase(),
+				title: titleCase(item),
+			}));
+	
+			const dataObject = {};
+			// const header = [
+			// 	{ id: 'year', title: 'Year' },
+			// 	{ id: 'camels', title: 'Camels' },
+			// 	{ id: 'cattle', title: 'Cattle' },
+			// 	{ id: 'chickens', title: 'Chickens' },
+			// 	{ id: 'goats', title: 'Goats' },
+			// 	{ id: 'pigs', title: 'Pigs' },
+			// 	{ id: 'sheep', title: 'Sheep' },
+			// ];
+	
+			console.log('\nReading CSV file...');
+			fs.createReadStream(filePath.trimRight())
+				.pipe(csv())
+				.on('data', (row) => {
+					const key = row.Year;
+					const item = row.Item;
+					const value = row.Value;
+					if (dataObject[key] === undefined) {
+						dataObject[key] = {};
+					}
+					dataObject[key].year = `Y${key}`;
+					dataObject[key][item.toLowerCase()] = value;
+				})
+				.on('end', async () => {
+					console.log('\nTransforming data...');
+					const data = Object.keys(dataObject).map((key) => dataObject[key]);
+	
+					console.log('\nWriting to CSV file...');
+					const outputPath = `[PROCESED] ${path.basename(filePath)}`;
+					await writeToCsv(header, data, outputPath);
+	
+					console.log(`\nLINK --> ${path.resolve(outputPath)}`);
+	
+					rl.close();
+				});
+		});
 	});
 });
 
