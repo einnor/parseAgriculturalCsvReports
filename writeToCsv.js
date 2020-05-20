@@ -7,7 +7,7 @@ const writeToCsv = (header = [], data = [], outputPath = 'output.csv') => {
 	});
 	csvWriter
 	.writeRecords(data)
-	.then(()=> console.log('The CSV file was written successfully!'));
+	.then(()=> console.log('\nThe CSV file was written successfully!'));
 };
 
 module.exports = writeToCsv;

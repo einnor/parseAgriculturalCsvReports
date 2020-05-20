@@ -1,6 +1,7 @@
 const csv = require('csv-parser');
 const fs = require('fs');
 const readline = require('readline');
+const path = require('path');
 
 const writeToCsv = require('./writeToCsv');
 
@@ -10,16 +11,16 @@ const rl = readline.createInterface({
 });
 
 const titleCase = (title) => {
-	var titledCase = title.toLowerCase().split(' ');
+	const titledCase = title.toLowerCase().split(' ');
 	for (var i = 0; i < titledCase.length; i++) {
 		titledCase[i] = titledCase[i][0].toUpperCase() + titledCase[i].slice(1);
 	}
-	return titledCase;
+	return titledCase.join(' ');
 }
 
-rl.question('Drag and drop the csv you want to parse here and press ENTER\n', (path) => {
-	rl.question('Enter the headers, separating them by commas, then press ENTER\n', (headers) => {
-		console.log('\n\nInitializing...\n');
+rl.question('\nDrag and drop the csv you want to parse here and press ENTER\n', (filePath) => {
+	rl.question('\nEnter the headers, separating them by commas, then press ENTER\n', (headers) => {
+		console.log('\n\nInitializing...');
 
 		const header = headers.split(',').map((item) => ({
 			id: item.toLowerCase(),
@@ -37,7 +38,8 @@ rl.question('Drag and drop the csv you want to parse here and press ENTER\n', (p
 		// 	{ id: 'sheep', title: 'Sheep' },
 		// ];
 
-		fs.createReadStream(path)
+		console.log('\nReading CSV file...');
+		fs.createReadStream(filePath.trimRight())
 			.pipe(csv())
 			.on('data', (row) => {
 				const key = row.Year;
@@ -51,11 +53,13 @@ rl.question('Drag and drop the csv you want to parse here and press ENTER\n', (p
 			})
 			.on('end', () => {
 				console.log('CSV file successfully processed');
+				console.log('\nTransforming data...');
 				console.log(dataObject);
 				const data = Object.keys(dataObject).map((key) => dataObject[key]);
-				writeToCsv(header, data, `[PROCESSED]${path}`);
+				console.log('\nWriting to CSV file...');
+				writeToCsv(header, data, `[PROCESED] ${path.basename(filePath)}`);
+				rl.close();
 			});
-		rl.close();
 	});
 });
 
