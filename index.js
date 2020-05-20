@@ -3,9 +3,35 @@ const fs = require('fs');
 const readline = require('readline');
 
 const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
+	input: process.stdin,
+	output: process.stdout
 });
+
+const titleCase = (title) => {
+	var titledCase = title.toLowerCase().split(' ');
+	for (var i = 0; i < title.length; i++) {
+		titledCase[i] = titledCase[i][0].toUpperCase() + titledCase[i].slice(1);
+	}
+	return sentence;
+}
+
+rl.question('Drag and drop the csv you want to parse here and press ENTER', (path) => {
+	rl.question('Enter the headers, separating them by commas, then press ENTER', (headers) => {
+		console.log('\n\n\nProcessing...\n\n\n');
+
+		const header = headers.split(',').map((item) => ({
+			id: item.toLowerCase(), title: item.toTe
+		}));
+		rl.close();
+	});
+});
+
+rl.on('close', function() {
+	console.log("\nBYE BYE !!!");
+	process.exit(0);
+});
+
+
 
 const writeToCsv = require('./writeToCsv');
 
