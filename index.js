@@ -19,18 +19,18 @@ const titleCase = (title) => {
 }
 
 rl.question('\nDrag and drop the csv you want to parse here and press ENTER\n', (filePath) => {
-	fs.access(filePath, fs.F_OK, (err) => {
+	const file = filePath.trimRight();
+	fs.access(file, fs.F_OK, (err) => {
 		if (err) {
-			console.log(filePath);
 			console.error('\nThe file path that you provided is invalid!');
 			rl.close();
 		}
 	
 		// File exists so proceed
-		rl.question('\nEnter the headers, separating them by commas, then press ENTER\n', (headers) => {
+		rl.question('\nEnter the headers, separating them by semicolons, then press ENTER\n', (headers) => {
 			console.log('\n\nInitializing...');
 	
-			const header = headers.split(',').map((item) => ({
+			const header = headers.split(';').map((item) => ({
 				id: item.toLowerCase(),
 				title: titleCase(item),
 			}));
@@ -47,7 +47,7 @@ rl.question('\nDrag and drop the csv you want to parse here and press ENTER\n', 
 			// ];
 	
 			console.log('\nReading CSV file...');
-			fs.createReadStream(filePath.trimRight())
+			fs.createReadStream(file)
 				.pipe(csv())
 				.on('data', (row) => {
 					const key = row.Year;
@@ -64,7 +64,7 @@ rl.question('\nDrag and drop the csv you want to parse here and press ENTER\n', 
 					const data = Object.keys(dataObject).map((key) => dataObject[key]);
 	
 					console.log('\nWriting to CSV file...');
-					const outputPath = `[PROCESED] ${path.basename(filePath)}`;
+					const outputPath = `[PROCESED] ${path.basename(file)}`;
 					await writeToCsv(header, data, outputPath);
 	
 					console.log(`\nLINK --> ${path.resolve(outputPath)}`);
