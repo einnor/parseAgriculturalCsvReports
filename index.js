@@ -51,13 +51,12 @@ rl.question('\nDrag and drop the csv you want to parse here and press ENTER\n', 
 				dataObject[key].year = `Y${key}`;
 				dataObject[key][item.toLowerCase()] = value;
 			})
-			.on('end', () => {
+			.on('end', async () => {
 				console.log('CSV file successfully processed');
 				console.log('\nTransforming data...');
-				console.log(dataObject);
 				const data = Object.keys(dataObject).map((key) => dataObject[key]);
 				console.log('\nWriting to CSV file...');
-				writeToCsv(header, data, `[PROCESED] ${path.basename(filePath)}`);
+				await writeToCsv(header, data, `[PROCESED] ${path.basename(filePath)}`);
 				rl.close();
 			});
 	});
