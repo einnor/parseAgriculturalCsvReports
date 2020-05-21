@@ -11,6 +11,7 @@ const rl = readline.createInterface({
 });
 
 const titleCase = (title) => {
+	console.log(title);
 	if (!title) {
 		return;
 	}
@@ -34,10 +35,11 @@ rl.question('\nDrag and drop the csv you want to parse here and press ENTER\n', 
 			console.log('\n\nInitializing...');
 	
 			const header = headers.split(';').filter((item) => {
-				if (item) {
+				const trimmedItem = item.trim();
+				if (trimmedItem) {
 					return {
-						id: item.toLowerCase(),
-						title: titleCase(item),
+						id: trimmedItem.toLowerCase(),
+						title: titleCase(trimmedItem),
 					};
 				}
 			});
