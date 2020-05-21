@@ -11,7 +11,6 @@ const rl = readline.createInterface({
 });
 
 const titleCase = (title) => {
-	console.log(title);
 	if (!title) {
 		return;
 	}
@@ -35,25 +34,15 @@ rl.question('\nDrag and drop the csv you want to parse here and press ENTER\n', 
 			console.log('\n\nInitializing...');
 	
 			const header = headers.split(';').filter((item) => {
-				const trimmedItem = item.trim();
-				if (trimmedItem) {
+				if (item) {
 					return {
-						id: trimmedItem.toLowerCase(),
-						title: titleCase(trimmedItem),
+						id: item.toLowerCase(),
+						title: titleCase(item),
 					};
 				}
 			});
 	
 			const dataObject = {};
-			// const header = [
-			// 	{ id: 'year', title: 'Year' },
-			// 	{ id: 'camels', title: 'Camels' },
-			// 	{ id: 'cattle', title: 'Cattle' },
-			// 	{ id: 'chickens', title: 'Chickens' },
-			// 	{ id: 'goats', title: 'Goats' },
-			// 	{ id: 'pigs', title: 'Pigs' },
-			// 	{ id: 'sheep', title: 'Sheep' },
-			// ];
 	
 			console.log('\nReading CSV file...');
 			fs.createReadStream(file)
