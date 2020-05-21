@@ -33,13 +33,12 @@ rl.question('\nDrag and drop the csv you want to parse here and press ENTER\n', 
 		rl.question('\nEnter the headers, separating them by semicolons, then press ENTER\n', (headers) => {
 			console.log('\n\nInitializing...');
 	
-			const header = headers.split(';').filter((item) => {
-				if (item) {
-					return {
-						id: item.toLowerCase(),
-						title: titleCase(item),
-					};
-				}
+			const header = headers.split(';').filter((item) => !!item).map((item) => {
+				const trimmedItem = item.trim();
+				return {
+					id: trimmedItem.toLowerCase(),
+					title: titleCase(trimmedItem),
+				};
 			});
 	
 			const dataObject = {};
